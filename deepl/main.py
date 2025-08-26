@@ -141,19 +141,35 @@ def parse_args(test: str | None = None) -> argparse.Namespace:
         action="store_true",
         help="read source text from stdin",
     )
+    group.add_argument(
+        "--server",
+        action="store_true",
+        help="run as HTTP server",
+    )
     parser.add_argument(
         "-F",
         "--fr",
         type=check_input_lang,
-        help="input language",
-        required=True,
+        help="input language (not required for server mode)",
+        required=False,
     )
     parser.add_argument(
         "-T",
         "--to",
         type=check_output_lang,
-        help="output language",
-        required=True,
+        help="output language (not required for server mode)",
+        required=False,
+    )
+    parser.add_argument(
+        "--host",
+        default="127.0.0.1",
+        help="server host (default: 127.0.0.1)",
+    )
+    parser.add_argument(
+        "--port",
+        type=int,
+        default=3001,
+        help="server port (default: 3001)",
     )
     parser.add_argument(
         "-t",
@@ -188,6 +204,18 @@ def main(test: str | None = None) -> None:
         test (str | None): test string
     """
     args = parse_args(test)
+    
+    if args.server:
+        # Run as HTTP server
+        from .server import run_server
+        run_server(args.host, args.port)
+        return
+    
+    # Validate required arguments for CLI mode
+    if not args.fr or not args.to:
+        print("Error: -F/--fr and -T/--to are required for CLI mode", file=sys.stderr)
+        sys.exit(1)
+        
     t = DeepLCLI(args.fr, args.to, timeout=args.timeout)
     script = ""
     if args.stdin:

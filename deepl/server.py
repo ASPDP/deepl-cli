@@ -6,7 +6,7 @@ import sys
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import parse_qs, urlparse
 
-from .deepl import DeepLCLI, DeepLCLIError
+from deepl import DeepLCLI, DeepLCLIError
 
 
 class TranslationHandler(BaseHTTPRequestHandler):
@@ -15,6 +15,18 @@ class TranslationHandler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:  # noqa: N802
         """Handle GET requests."""
         parsed_url = urlparse(self.path)
+        
+        if parsed_url.path == "/health":
+            # Health check endpoint
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            
+            response_data = {"status": "alive", "message": "Server is running"}
+            response_json = json.dumps(response_data)
+            self.wfile.write(response_json.encode("utf-8"))
+            return
         
         if parsed_url.path != "/api/translate":
             self.send_error(404, "Not Found")

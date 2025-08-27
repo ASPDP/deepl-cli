@@ -6,9 +6,9 @@ import warnings
 from pathlib import Path
 from shutil import get_terminal_size
 
-from deepl import __version__
+__version__ = "1.0.0"
 
-from .deepl import DeepLCLI
+from deepl import DeepLCLI
 
 warnings.filterwarnings("ignore")
 
@@ -207,7 +207,7 @@ def main(test: str | None = None) -> None:
     
     if args.server:
         # Run as HTTP server
-        from .server import run_server
+        from server import run_server
         run_server(args.host, args.port)
         return
     

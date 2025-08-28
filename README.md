@@ -95,6 +95,44 @@ curl "http://127.0.0.1:3001/api/translate?engine=deepl&from=en&to=ru&text=hello%
 }
 ```
 
+#### Windows
+
+The server commands work identically on Windows. You can run them in Command Prompt or PowerShell:
+
+**Command Prompt:**
+
+```cmd
+REM Start server on default port 3001
+deepl --server
+
+REM Start server on custom host/port
+deepl --server --host 0.0.0.0 --port 8080
+```
+
+**PowerShell:**
+
+```powershell
+# Start server on default port 3001
+deepl --server
+
+# Start server on custom host/port
+deepl --server --host 0.0.0.0 --port 8080
+```
+
+**Testing the API on Windows:**
+
+Using PowerShell (recommended):
+
+```powershell
+Invoke-RestMethod -Uri "http://127.0.0.1:3001/api/translate?engine=deepl&from=en&to=ru&text=hello%20world"
+```
+
+Using curl (if available):
+
+```cmd
+curl "http://127.0.0.1:3001/api/translate?engine=deepl&from=en&to=ru&text=hello%20world"
+```
+
 ```shellsession
 $ deepl -h
 usage: deepl [-h] (-f PATH | -s | --server) [-F FR] [-T TO] [--host HOST] [--port PORT] [-t MS] [-v] [-V]
